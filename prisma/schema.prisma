@@ -85,8 +85,8 @@ model User {
   bookings     Booking[] @relation("bookings") // As a Customer
   services     Service[] // As a Provider
   jobs         Booking[] @relation("jobs") // As a Provider
-  givenRatings Rating[]  // As a Customer
-  ratings      Rating[]  // As a Provider
+  givenRatings Rating[] @relation("givenRatings") // As a Customer
+  ratings      Rating[] @relation("ratings") // As a Provider
 }
 
 model Profile {
