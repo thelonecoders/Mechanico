@@ -1,0 +1,184 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Model for Next-Auth.js
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// Core Application Models
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  emailVerified DateTime?
+  phone         String?   @unique // Required for Phone/OTP login
+  password      String?   // Hashed password, optional if using OTP/OAuth
+  image         String?
+  role          UserRole  @default(CUSTOMER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  profile      Profile?
+  accounts     Account[]
+  sessions     Session[]
+  vehicles     Vehicle[] // As a Customer
+  bookings     Booking[] // As a Customer
+  services     Service[] // As a Provider
+  jobs         Booking[] // As a Provider
+  givenRatings Rating[]  // As a Customer
+  ratings      Rating[]  // As a Provider
+}
+
+model Profile {
+  id        String  @id @default(cuid())
+  userId    String  @unique
+  firstName String
+  lastName  String
+  avatar    String?
+
+  // Provider-specific fields
+  businessName   String?
+  isAvailable    Boolean? // For on-demand status
+  latitude       Float?
+  longitude      Float?
+  specialization String? // Comma-separated or JSON
+  trustScore     Int?    @default(0)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Vehicle {
+  id           String    @id @default(cuid())
+  make         String
+  model        String
+  year         Int
+  licensePlate String
+  vin          String?
+  color        String?
+  mileage      Int?
+  image        String?
+
+  ownerId      String
+  owner        User      @relation(fields: [ownerId], references: [id])
+  bookings     Booking[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Service {
+  id          String   @id @default(cuid())
+  name        String
+  category    String
+  description String
+  basePrice   Float
+  duration    String // e.g., "30 minutes"
+  isActive    Boolean  @default(true)
+
+  providerId  String
+  provider    User     @relation(fields: [providerId], references: [id])
+  bookings    Booking[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Booking {
+  id        String        @id @default(cuid())
+  status    BookingStatus @default(PENDING)
+  price     Float
+  date      DateTime
+  notes     String?
+
+  // Location of the service
+  latitude  Float
+  longitude Float
+  locationAddress String?
+
+  customerId String
+  customer   User   @relation("bookings", fields: [customerId], references: [id])
+
+  providerId String
+  provider   User   @relation("jobs", fields: [providerId], references: [id])
+
+  vehicleId String
+  vehicle   Vehicle @relation(fields: [vehicleId], references: [id])
+
+  serviceId String
+  service   Service @relation(fields: [serviceId], references: [id])
+
+  rating    Rating? // A booking can have one rating
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Rating {
+  id         String   @id @default(cuid())
+  score      Int      // 1-5
+  comment    String?
+  date       DateTime @default(now())
+
+  bookingId  String   @unique
+  booking    Booking  @relation(fields: [bookingId], references: [id])
+
+  customerId String
+  customer   User     @relation("givenRatings", fields: [customerId], references: [id])
+
+  providerId String
+  provider   User     @relation("ratings", fields: [providerId], references: [id])
+}
+
+enum UserRole {
+  ADMIN
+  CUSTOMER
+  PROVIDER
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
