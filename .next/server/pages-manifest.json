@@ -1,0 +1,19 @@
+{
+  "/_app": "pages/_app.js",
+  "/_error": "pages/_error.js",
+  "/Accounting": "pages/Accounting.js",
+  "/Auth": "pages/Auth.js",
+  "/Bookings": "pages/Bookings.js",
+  "/Employees": "pages/Employees.js",
+  "/Index": "pages/Index.js",
+  "/Inventory": "pages/Inventory.js",
+  "/NotFound": "pages/NotFound.js",
+  "/Dashboard": "pages/Dashboard.js",
+  "/Reports": "pages/Reports.js",
+  "/Reviews": "pages/Reviews.js",
+  "/Services": "pages/Services.js",
+  "/Settings": "pages/Settings.js",
+  "/Users": "pages/Users.js",
+  "/Vehicles": "pages/Vehicles.js",
+  "/_document": "pages/_document.js"
+}

@@ -1,0 +1,16 @@
+{
+  "/api/auth/register/route": "app/api/auth/register/route.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/customer/book/route": "app/api/customer/book/route.js",
+  "/api/customer/bookings/route": "app/api/customer/bookings/route.js",
+  "/api/customer/vehicles/route": "app/api/customer/vehicles/route.js",
+  "/api/provider/bookings/confirm/route": "app/api/provider/bookings/confirm/route.js",
+  "/api/provider/bookings/route": "app/api/provider/bookings/route.js",
+  "/api/provider/location/route": "app/api/provider/location/route.js",
+  "/api/providers/nearby/route": "app/api/providers/nearby/route.js",
+  "/api/services/route": "app/api/services/route.js",
+  "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
+  "/login/page": "app/login/page.js",
+  "/page": "app/page.js",
+  "/customer/page": "app/customer/page.js"
+}
