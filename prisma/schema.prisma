@@ -129,11 +129,13 @@ model Vehicle {
 model Service {
   id          String   @id @default(cuid())
   name        String
-  category    String
   description String
-  basePrice   Float
-  duration    String // e.g., "30 minutes"
+  basePrice   Float    // Base price, can be adjusted
+  duration    String   // e.g., "30 minutes"
   isActive    Boolean  @default(true)
+
+  categoryId  String
+  category    ServiceCategory @relation(fields: [categoryId], references: [id])
 
   providerId  String
   provider    User     @relation(fields: [providerId], references: [id])
