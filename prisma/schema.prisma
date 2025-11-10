@@ -82,9 +82,9 @@ model User {
   accounts     Account[]
   sessions     Session[]
   vehicles     Vehicle[] // As a Customer
-  bookings     Booking[] // As a Customer
+  bookings     Booking[] @relation("bookings") // As a Customer
   services     Service[] // As a Provider
-  jobs         Booking[] // As a Provider
+  jobs         Booking[] @relation("jobs") // As a Provider
   givenRatings Rating[]  // As a Customer
   ratings      Rating[]  // As a Provider
 }
