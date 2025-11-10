@@ -46,6 +46,26 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+model OtpToken {
+  id        String   @id @default(cuid())
+  phone     String
+  token     String   // 6-digit code
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@unique([phone, token])
+}
+
+model ServiceCategory {
+  id          String    @id @default(cuid())
+  name        String    @unique // e.g., "مکانیکی", "برقی"
+  description String?
+  icon        String?   // Icon name (e.g., "wrench")
+  services    Service[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
 // Core Application Models
 model User {
   id            String    @id @default(cuid())
