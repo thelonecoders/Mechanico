@@ -69,10 +69,10 @@ model ServiceCategory {
 // Core Application Models
 model User {
   id            String    @id @default(cuid())
-  email         String    @unique
+  email         String?   @unique // Optional, as phone is primary
   emailVerified DateTime?
-  phone         String?   @unique // Required for Phone/OTP login
-  password      String?   // Hashed password, optional if using OTP/OAuth
+  phone         String    @unique // Required - Primary login identifier
+  password      String?   // Hashed password, optional
   image         String?
   role          UserRole  @default(CUSTOMER)
   createdAt     DateTime  @default(now())
